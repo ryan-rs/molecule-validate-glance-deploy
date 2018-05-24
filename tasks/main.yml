@@ -1,16 +1,24 @@
 ---
 # tasks file for molecule-validate-glance-deploy
 
+- name: Clean old openstack-ansible-ops dir if previously existing
+  file:
+    state: absent
+    path: /opt/openstack-ansible-ops
+
 - name: Clone openstack-ansible-ops repo
   git:
     repo=https://github.com/openstack/openstack-ansible-ops.git
     dest=/opt/openstack-ansible-ops
 
-- name: Install python modules into /opt/ansible-runtime virtualenv
+- namae: Create virtualenv for the submodule
+  shell: virtualenv /opt/molecule-test-env-on-sut
+
+- name: Install python modules into /opt/molecule-test-env-on-sut virtualenv
   pip:
     name: "{{ item }}"
     state: present
-    virtualenv: /opt/ansible-runtime
+    virtualenv: /opt/molecule-test-env-on-sut
   with_items:
     - ansible
     - shade
@@ -28,7 +36,7 @@
 
 - name: Create networks
   shell: |
-    . /opt/ansible-runtime/bin/activate
+    . /opt/molecule-test-env-on-sut/bin/activate
     ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i {{ inventory_file }} openstack-service-setup.yml
     deactivate
   args:
