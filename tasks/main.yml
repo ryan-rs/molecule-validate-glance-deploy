@@ -17,8 +17,8 @@
 - name: Install python modules into /opt/molecule-test-env-on-sut virtualenv
   pip:
     name: "{{ item }}"
-    extra_args: --isolated
     state: present
+    extra_args: --isolated
     virtualenv: /opt/molecule-test-env-on-sut
   with_items:
     - ansible
