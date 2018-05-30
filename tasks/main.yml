@@ -11,13 +11,14 @@
     repo=https://github.com/openstack/openstack-ansible-ops.git
     dest=/opt/openstack-ansible-ops
 
-- namae: Create virtualenv for the submodule
+- name: Create virtualenv for the submodule
   shell: virtualenv /opt/molecule-test-env-on-sut
 
 - name: Install python modules into /opt/molecule-test-env-on-sut virtualenv
   pip:
     name: "{{ item }}"
     state: present
+    extra_args: --isolated
     virtualenv: /opt/molecule-test-env-on-sut
   with_items:
     - ansible
