@@ -25,18 +25,11 @@
     state: directory
   delegate_to: localhost
 
-- name: Get '{{ os_clouds_yaml_path }}' from 'infra1' Host
-  block:
-    - name: Attempt to Extract '{{ os_clouds_yaml_path }}' Contents from 'infra1' Host
-      shell: |
-        cat "{{ os_clouds_yaml_path }}"
-      register: infra1_clouds_yaml_contents
-
-    - name: Copy '{{ os_clouds_yaml_path }}' from 'infra1' Host to Deployment Host
-      copy:
-        dest: "{{ os_clouds_yaml_path }}"
-        content: "{{ infra1_clouds_yaml_contents.stdout }}"
-      delegate_to: localhost
+- name: Copy '{{ os_clouds_yaml_path }}' from 'infra1' Host to Deployment Host
+  fetch:
+    src: "{{ os_clouds_yaml_path }}"
+    dest: "{{ os_clouds_yaml_path }}"
+    flat: yes
   when: infra1_clouds_yaml_exists.stat.exists
 
 - name: Get '{{ os_clouds_yaml_path }}' from Utility Container
